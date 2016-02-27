@@ -12,7 +12,7 @@ Demo script showing detections in sample images.
 
 See README.md for installation instructions before running.
 """
-
+import pdb 
 import _init_paths
 from fast_rcnn.config import cfg
 from fast_rcnn.test import im_detect
@@ -35,7 +35,6 @@ NETS = {'vgg16': ('VGG16',
                   'VGG16_faster_rcnn_final.caffemodel'),
         'zf': ('ZF',
                   'ZF_faster_rcnn_final.caffemodel')}
-
 
 def vis_detections(im, class_name, dets, thresh=0.5):
     """Draw detected bounding boxes."""
@@ -85,10 +84,12 @@ def demo(net, image_name):
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
-    CONF_THRESH = 0.8
+    CONF_THRESH = 0.4
     NMS_THRESH = 0.3
     for cls_ind, cls in enumerate(CLASSES[1:]):
         cls_ind += 1 # because we skipped background
+        if CLASSES[cls_ind] != 'person':
+            continue
         cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]
         cls_scores = scores[:, cls_ind]
         dets = np.hstack((cls_boxes,
@@ -141,8 +142,14 @@ if __name__ == '__main__':
     for i in xrange(2):
         _, _= im_detect(net, im)
 
-    im_names = ['000456.jpg', '000542.jpg', '001150.jpg',
-                '001763.jpg', '004545.jpg']
+    #im_names = ['000456.jpg', '000542.jpg', '001150.jpg',
+    #            '001763.jpg', '004545.jpg']
+    im_names = ['2008_000266.jpg','2008_000281.jpg','2008_000307.jpg', \
+    #            '2008_000880.jpg','2008_000867.jpg','2008_000868.jpg', \
+    #            '2008_000987.jpg','2008_001928.jpg','smallcrowd.jpg','1.jpg']
+    #im_names = ['2008_000987.jpg','2008_001928.jpg','smallcrowd.jpg','1.jpg',\
+                'faces.jpg']
+
     for im_name in im_names:
         print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
         print 'Demo for data/demo/{}'.format(im_name)
